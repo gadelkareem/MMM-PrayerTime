@@ -319,6 +319,18 @@ Module.register("MMM-PrayerTime",{
         //for (t in this.todaySchedule)
         for (t in this.arrTodaySchedule)
         {
+	  // Check if the current time is within the prayer time
+          var prayerStartTime = moment(this.arrTodaySchedule[t][1], "HH:mm");
+          var prayerEndTime = moment(this.arrTodaySchedule[(parseInt(t) + 1) % this.arrTodaySchedule.length][1], "HH:mm");
+
+          // If the prayer end time is before the start time, it means the prayer time spans midnight
+          if (prayerEndTime.isBefore(prayerStartTime)) {
+            prayerEndTime.add(1, 'day');
+          }
+          currentPrayerClass = "";
+          if (now.isBetween(prayerStartTime, prayerEndTime)) {
+            currentPrayerClass = "current-prayer";
+          }
           row = document.createElement("tr");
           if (this.config.colored) {
             row.className = "colored";
@@ -326,14 +338,15 @@ Module.register("MMM-PrayerTime",{
           table.appendChild(row);
 
           var occasionName = document.createElement("td");
-          occasionName.className = "occasion-name bright light";
+          occasionName.className = "occasion-name bright light " + currentPrayerClass;
+          
           //occasionName.innerHTML = this.translate(t);
           occasionName.innerHTML = this.translate(this.arrTodaySchedule[t][0].toUpperCase());
           row.appendChild(occasionName);
 
           // today
           var occasionTime = document.createElement("td");
-          occasionTime.className = "occasion-time bright light";
+          occasionTime.className = "occasion-time bright light " + currentPrayerClass;
           //occasionTime.innerHTML = this.todaySchedule[t];
           occasionTime.innerHTML = (this.config.timeFormat == 12 ? moment(this.arrTodaySchedule[t][1], ["HH:mm"]).format("h:mm A") : this.arrTodaySchedule[t][1]);
           row.appendChild(occasionTime);
