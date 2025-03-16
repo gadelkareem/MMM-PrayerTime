@@ -314,7 +314,7 @@ Module.register("MMM-PrayerTime",{
           occasionTimeNext.innerHTML = this.translate('TOMORROW');
           row.appendChild(occasionTimeNext);
         }
-
+	var now = moment();
         //for (var i = 0, count = this.todaySchedule.length; i < count; i++) {
         //for (t in this.todaySchedule)
         for (t in this.arrTodaySchedule)
